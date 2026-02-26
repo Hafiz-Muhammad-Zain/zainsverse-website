@@ -2,94 +2,1067 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Hafiz Muhammad Zain – Automation & AI Workflows</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hafiz Muhammad Zain — AI Automation Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --border: #1f1f1f;
+      --accent: #c8f04a;
+      --accent-dim: rgba(200, 240, 74, 0.12);
+      --text: #e8e8e0;
+      --text-muted: #6b6b60;
+      --text-dim: #3a3a35;
+      --mono: 'DM Mono', monospace;
+      --serif: 'Fraunces', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-      line-height: 1.6;
-      color: #222;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
     }
-    h1, h2 {
-      color: #111;
-      margin-bottom: 10px;
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
     }
-    .section {
-      margin-bottom: 40px;
+
+    /* GRID LINES */
+    .grid-lines {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 0;
     }
-    .tagline {
-      font-size: 1.1rem;
-      margin-top: 0;
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
     }
-    .cta {
-      background: #f4f4f4;
-      padding: 18px 20px;
-      border-left: 4px solid #333;
-      border-radius: 6px;
-    }
-    a {
-      color: #0066cc;
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
       text-decoration: none;
     }
-    a:hover {
-      text-decoration: underline;
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
     }
-    .pill {
-      display: inline-block;
-      background: #eee;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      margin-right: 8px;
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* MAIN LAYOUT */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-name {
+      font-family: var(--serif);
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--text);
       margin-bottom: 8px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.35s forwards;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-tagline {
+      font-family: var(--serif);
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-top: 24px;
+      max-width: 600px;
+      line-height: 1.4;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s forwards;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 40px;
+      margin-top: 56px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.65s forwards;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hero-meta-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .hero-meta-value {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      margin-top: 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: #0d0d0d;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #d9ff55;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* SKILLS STRIP */
+    .skills-strip {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+      flex-wrap: wrap;
+    }
+
+    .skills-strip-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+
+    .skill-tag {
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    /* SECTION HEADERS */
+    .section {
+      padding: 96px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .section-number {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 20px;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .stat-box {
+      background: var(--surface);
+      padding: 28px 24px;
+    }
+
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* PORTFOLIO */
+    .portfolio-grid {
+      display: grid;
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .project-card {
+      background: var(--surface);
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: start;
+      transition: background 0.2s;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .project-card:hover {
+      background: #161616;
+    }
+
+    .project-card:hover .project-arrow { color: var(--accent); transform: translate(3px, -3px); }
+
+    .project-number {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+
+    .project-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 560px;
+      margin-bottom: 20px;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .project-tag {
+      padding: 4px 10px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(200,240,74,0.2);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .project-meta {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 16px;
+    }
+
+    .project-arrow {
+      font-size: 20px;
+      color: var(--text-dim);
+      transition: all 0.2s;
+    }
+
+    .project-stat {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .project-stat span {
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    /* BLOG SECTION */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .blog-card {
+      background: var(--surface);
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s;
+      display: block;
+    }
+
+    .blog-card:hover { background: #161616; }
+    .blog-card:hover .blog-title { color: var(--accent); }
+
+    .blog-date {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .blog-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 12px;
+      transition: color 0.2s;
+    }
+
+    .blog-excerpt {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .blog-cta-row {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .blog-cta-text {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* CONTACT */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .contact-intro {
+      font-family: var(--serif);
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 24px;
+    }
+
+    .contact-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .contact-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      background: var(--surface);
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .contact-link:hover { background: #161616; }
+    .contact-link:hover .contact-link-label { color: var(--accent); }
+
+    .contact-link-type {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .contact-link-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 32px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-text {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-location {
+      font-size: 11px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .location-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      max-width: 680px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 48px;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+
+    .modal-number {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .modal-tags {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .modal-section-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      margin-top: 28px;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.85;
+    }
+
+    .modal-blog-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 28px;
+      padding: 12px 20px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+    }
+
+    .modal-blog-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      main { padding: 0 24px; }
+      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+      .project-card { grid-template-columns: 1fr; }
+      .project-meta { align-items: flex-start; }
+      .hero-meta { flex-wrap: wrap; gap: 24px; }
+      .modal { padding: 32px 24px; }
     }
   </style>
 </head>
 <body>
+  <div class="grid-lines"></div>
 
-  <h1>Hafiz Muhammad Zain</h1>
-  <p class="tagline"><strong>I build automated workflows that save teams time.</strong></p>
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">HMZ / zainsverse.de</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
-  <div class="section">
-    <h2>What I do</h2>
-    <p>
-      I help small teams and businesses automate manual work using APIs, n8n, and AI-powered processing.
-      I focus on workflows that are reliable, monitored, and easy to maintain.
-    </p>
-    <div>
-      <span class="pill">n8n automation</span>
-      <span class="pill">API integrations</span>
-      <span class="pill">Google Workspace</span>
-      <span class="pill">Slack workflows</span>
-      <span class="pill">AI summaries</span>
-      <span class="pill">Data scraping</span>
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <p class="hero-label">AI Automation Engineer · Germany</p>
+      <h1 class="hero-name">Hafiz<br>Muhammad <em>Zain</em></h1>
+      <p class="hero-tagline">I build intelligent automations that eliminate repetitive work — combining n8n, Python, and AI to create systems that actually run.</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Location</span>
+          <span class="hero-meta-value">Germany (EU)</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Stack</span>
+          <span class="hero-meta-value">n8n · Python · Pinecone · OpenRouter</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Availability</span>
+          <span class="hero-meta-value">Open for projects</span>
+        </div>
+      </div>
+      <div class="hero-cta">
+        <a href="#contact" class="btn-primary">Let's work together →</a>
+        <a href="#work" class="btn-secondary">See my work</a>
+      </div>
+    </section>
+
+    <!-- SKILLS STRIP -->
+    <div class="skills-strip reveal">
+      <span class="skills-strip-label">Skills</span>
+      <span class="skill-tag">n8n Workflows</span>
+      <span class="skill-tag">AI Agents</span>
+      <span class="skill-tag">Python API</span>
+      <span class="skill-tag">RAG Systems</span>
+      <span class="skill-tag">Time Series</span>
+      <span class="skill-tag">Data Analysis</span>
+      <span class="skill-tag">Pinecone</span>
+      <span class="skill-tag">Google Workspace</span>
+      <span class="skill-tag">VPS / Self-Hosted</span>
+      <span class="skill-tag">GDPR-Compliant</span>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="section" id="about">
+      <div class="section-header reveal">
+        <span class="section-number">01</span>
+        <h2 class="section-title">About</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>I help small and medium businesses automate the manual work that slows teams down. My focus is on building reliable, maintainable systems — not just one-off scripts that break when something changes.</p>
+          <p>My background combines data analysis and API engineering with modern AI tooling. I self-host everything on Hetzner infrastructure in Germany, which means your data stays in the EU — important for businesses with GDPR obligations.</p>
+          <p>Every automation I build is documented, monitored, and designed so your team can understand it without needing me on call every week.</p>
+        </div>
+        <div class="about-stats reveal">
+          <div class="stat-box">
+            <div class="stat-number">4+</div>
+            <div class="stat-label">Production workflows built</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">EU</div>
+            <div class="stat-label">GDPR-compliant self-hosted infra</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">n8n</div>
+            <div class="stat-label">Primary automation platform</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">API integrations possible</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section class="section" id="work">
+      <div class="section-header reveal">
+        <span class="section-number">02</span>
+        <h2 class="section-title">Selected Work</h2>
+      </div>
+      <div class="portfolio-grid reveal">
+
+        <!-- Project 1 -->
+        <div class="project-card" onclick="openModal('p1')">
+          <div>
+            <div class="project-number">Project 001</div>
+            <div class="project-title">AI Customer Service Agent</div>
+            <div class="project-desc">A chat-based AI agent connected to Google Sheets that lets teams query customer orders and account status in plain language. No SQL, no spreadsheet hunting — just ask and get an answer.</div>
+            <div class="project-tags">
+              <span class="project-tag">n8n</span>
+              <span class="project-tag">AI Agent</span>
+              <span class="project-tag">Google Sheets</span>
+              <span class="project-tag">OpenRouter</span>
+            </div>
+          </div>
+          <div class="project-meta">
+            <div class="project-arrow">↗</div>
+            <div class="project-stat">Read more</div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-card" onclick="openModal('p2')">
+          <div>
+            <div class="project-number">Project 002</div>
+            <div class="project-title">Automated Content Pipeline</div>
+            <div class="project-desc">A workflow that reads topic ideas from a Google Sheet, searches the web for current context via Tavily, generates a polished post with AI, and writes the result back automatically.</div>
+            <div class="project-tags">
+              <span class="project-tag">n8n</span>
+              <span class="project-tag">Tavily Search</span>
+              <span class="project-tag">AI Writing</span>
+              <span class="project-tag">Google Sheets</span>
+            </div>
+          </div>
+          <div class="project-meta">
+            <div class="project-arrow">↗</div>
+            <div class="project-stat">Read more</div>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card" onclick="openModal('p3')">
+          <div>
+            <div class="project-number">Project 003</div>
+            <div class="project-title">RAG FAQ Chatbot</div>
+            <div class="project-desc">A fully self-hosted RAG pipeline: documents uploaded to Google Drive are automatically ingested, chunked, embedded with HuggingFace, and stored in Pinecone. A chat interface then answers questions using only your knowledge base.</div>
+            <div class="project-tags">
+              <span class="project-tag">RAG</span>
+              <span class="project-tag">Pinecone</span>
+              <span class="project-tag">HuggingFace</span>
+              <span class="project-tag">Google Drive</span>
+              <span class="project-tag">n8n</span>
+            </div>
+          </div>
+          <div class="project-meta">
+            <div class="project-arrow">↗</div>
+            <div class="project-stat">Read more</div>
+          </div>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="project-card" onclick="openModal('p4')">
+          <div>
+            <div class="project-number">Project 004</div>
+            <div class="project-title">AI Email Classifier & Auto-Responder</div>
+            <div class="project-desc">Monitors a Gmail inbox, classifies incoming emails with AI, queries a Pinecone knowledge base to draft contextual replies, sends the response automatically, and notifies the team via Slack — all without human intervention for routine queries.</div>
+            <div class="project-tags">
+              <span class="project-tag">Gmail</span>
+              <span class="project-tag">AI Classifier</span>
+              <span class="project-tag">Pinecone</span>
+              <span class="project-tag">Slack</span>
+              <span class="project-tag">n8n</span>
+            </div>
+          </div>
+          <div class="project-meta">
+            <div class="project-arrow">↗</div>
+            <div class="project-stat">Read more</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BLOG -->
+    <section class="section" id="blog">
+      <div class="section-header reveal">
+        <span class="section-number">03</span>
+        <h2 class="section-title">Writing</h2>
+      </div>
+      <div class="blog-grid reveal" id="blog-grid">
+
+        <!-- BLOG POST TEMPLATE — duplicate this block to add new posts -->
+        <a class="blog-card" href="https://blog.zainsverse.de" target="_blank">
+          <div class="blog-date">Coming Soon</div>
+          <div class="blog-title">How I Built a RAG Chatbot in n8n Using Pinecone and HuggingFace</div>
+          <div class="blog-excerpt">A full walkthrough of building a document-aware chatbot — from file ingestion to vector search to the chat interface. No Python required.</div>
+        </a>
+
+        <a class="blog-card" href="https://blog.zainsverse.de" target="_blank">
+          <div class="blog-date">Coming Soon</div>
+          <div class="blog-title">Automating Email Triage with AI: A Real n8n Workflow</div>
+          <div class="blog-excerpt">How I built a Gmail automation that classifies, responds to, and routes emails using AI — and what I learned about edge cases along the way.</div>
+        </a>
+
+        <a class="blog-card" href="https://blog.zainsverse.de" target="_blank">
+          <div class="blog-date">Coming Soon</div>
+          <div class="blog-title">Self-Hosting n8n on Hetzner with Coolify: A Practical Guide</div>
+          <div class="blog-excerpt">Why I chose to self-host n8n instead of the cloud version, how I set it up on a Hetzner VPS using Coolify, and what I'd do differently.</div>
+        </a>
+
+      </div>
+      <div class="blog-cta-row reveal">
+        <span class="blog-cta-text">All articles on</span>
+        <a href="https://blog.zainsverse.de" target="_blank" class="btn-secondary">blog.zainsverse.de ↗</a>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="section-header reveal">
+        <span class="section-number">04</span>
+        <h2 class="section-title">Contact</h2>
+      </div>
+      <div class="contact-layout">
+        <div class="reveal">
+          <p class="contact-intro">Have a workflow that needs automating? Let's talk.</p>
+          <p class="contact-sub">I work with small teams and businesses that want to eliminate manual processes. Whether it's a single integration or a full AI automation system, I'm happy to discuss what's possible and what makes sense for your setup.</p>
+          <a href="mailto:zainravian124@gmail.com" class="btn-primary">Send an email →</a>
+        </div>
+        <div class="contact-links reveal">
+          <a href="mailto:zainravian124@gmail.com" class="contact-link">
+            <span class="contact-link-type">Email</span>
+            <span class="contact-link-label">zainravian124@gmail.com →</span>
+          </a>
+          <a href="https://blog.zainsverse.de" target="_blank" class="contact-link">
+            <span class="contact-link-type">Blog</span>
+            <span class="contact-link-label">blog.zainsverse.de →</span>
+          </a>
+          <a href="https://github.com" target="_blank" class="contact-link">
+            <span class="contact-link-type">GitHub</span>
+            <span class="contact-link-label">github.com/zain →</span>
+          </a>
+          <div class="contact-link" style="cursor:default;">
+            <span class="contact-link-type">Location</span>
+            <span class="contact-link-label">Germany · EU · GDPR-ready</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2025 Hafiz Muhammad Zain · zainsverse.de</span>
+    <span class="footer-location">
+      <span class="location-dot"></span>
+      Based in Germany · Available for remote work
+    </span>
+  </footer>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal" id="modal-content">
+      <button class="modal-close" onclick="closeModal()">✕ close</button>
+      <div id="modal-body"></div>
     </div>
   </div>
 
-  <div class="section">
-    <h2>Portfolio project</h2>
-    <p>
-      <strong>Automated Industry News Pipeline</strong><br />
-      A scheduled workflow that collects relevant industry news, summarizes it using AI (200–400 words),
-      and publishes posts to a blog automatically with error handling and logs.
-    </p>
-    <p>
-      Blog (coming soon): <a href="https://blog.zainsverse.de" target="_blank" rel="noopener">blog.zainsverse.de</a>
-    </p>
-  </div>
+  <script>
+    // ── SCROLL REVEAL ──
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 60);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
 
-  <div class="section cta">
-    <h2>Contact</h2>
-    <p>
-      Email: <a href="mailto:zainravian124@gmail.com">zainravian124@gmail.com</a>
-    </p>
-    <p style="margin-bottom:0;">
-      Location: Germany (Europe/Berlin)
-    </p>
-  </div>
+    // ── MODAL DATA ──
+    // TO ADD A NEW PROJECT: copy one of the objects below and add to this array
+    const projects = {
+      p1: {
+        number: 'Project 001',
+        title: 'AI Customer Service Agent',
+        tags: ['n8n', 'AI Agent', 'Google Sheets', 'OpenRouter'],
+        problem: 'Customer support teams waste time manually searching spreadsheets to answer "what\'s the status of order #1234?" type questions. Every lookup interrupts focus and slows response time.',
+        solution: 'Built an AI chat agent in n8n that connects directly to Google Sheets. The agent can look up orders by name or ID, check customer account status, and append new records — all through natural language conversation. No spreadsheet access needed by the end user.',
+        stack: 'n8n · OpenRouter (AI model routing) · Google Sheets API · Memory buffer for conversation context',
+        outcome: 'Customer status lookups that previously required manual spreadsheet searches can now be answered instantly through a chat interface. Supports multiple tools in parallel and remembers conversation context.',
+        blogLink: 'https://blog.zainsverse.de'
+      },
+      p2: {
+        number: 'Project 002',
+        title: 'Automated Content Pipeline',
+        tags: ['n8n', 'Tavily Search', 'AI Writing', 'Google Sheets'],
+        problem: 'Creating regular content for LinkedIn or blogs requires research time before writing. This creates a bottleneck that means either inconsistent posting or hours spent on prep.',
+        solution: 'A workflow that reads pending topics from a Google Sheet, uses Tavily to search the web for current context on each topic, passes that research to an AI agent to generate a polished post, then writes the result back to the sheet with a status update.',
+        stack: 'n8n · Tavily Search API · OpenRouter (AI) · Google Sheets API',
+        outcome: 'Takes a topic idea from a spreadsheet to a ready-to-publish post automatically. Each post is grounded in current web content rather than just AI hallucination. Fully hands-off after initial setup.',
+        blogLink: 'https://blog.zainsverse.de'
+      },
+      p3: {
+        number: 'Project 003',
+        title: 'RAG FAQ Chatbot',
+        tags: ['RAG', 'Pinecone', 'HuggingFace', 'Google Drive', 'n8n'],
+        problem: 'Businesses with large documentation sets (FAQs, manuals, policies) struggle to make that knowledge accessible. Staff and customers ask the same questions repeatedly because the documents are hard to search.',
+        solution: 'A full RAG pipeline built in n8n. When a new file is added to a specific Google Drive folder, it\'s automatically downloaded, split into chunks, embedded using HuggingFace models, and stored in Pinecone. A separate chat interface then answers questions by retrieving the most relevant chunks and generating a contextual response.',
+        stack: 'n8n · Google Drive API · HuggingFace Embeddings · Pinecone Vector DB · OpenRouter · Recursive text splitting',
+        outcome: 'Any document uploaded to Google Drive becomes instantly queryable through a chat interface. The system stays up to date automatically — no manual re-indexing required. Self-hosted on EU infrastructure.',
+        blogLink: 'https://blog.zainsverse.de'
+      },
+      p4: {
+        number: 'Project 004',
+        title: 'AI Email Classifier & Auto-Responder',
+        tags: ['Gmail', 'AI Classifier', 'Pinecone', 'Slack', 'n8n'],
+        problem: 'High-volume inboxes require constant monitoring. Sorting emails, drafting replies to common questions, and routing non-standard emails all consume significant team time.',
+        solution: 'A Gmail-triggered n8n workflow that classifies each incoming email using AI. Customer emails are handled by an AI agent that queries a Pinecone knowledge base for relevant context and sends a tailored reply. Non-customer emails are filtered out silently. A Slack integration handles team notification and channel management for escalations.',
+        stack: 'n8n · Gmail API · AI Text Classifier · OpenRouter · Pinecone · HuggingFace Embeddings · Slack API',
+        outcome: 'Routine customer emails are handled automatically without human intervention. The knowledge base ensures replies are accurate and grounded in company documentation. Unusual emails are flagged rather than auto-replied, keeping a human in the loop for edge cases.',
+        blogLink: 'https://blog.zainsverse.de'
+      }
+    };
 
+    // ── HOW TO ADD A BLOG POST ──
+    // Find the blog-grid section above in the HTML and copy/paste a .blog-card block
+    // Fill in: date, title, excerpt, and the href link to your blog post URL
+
+    function openModal(id) {
+      const p = projects[id];
+      if (!p) return;
+      document.getElementById('modal-body').innerHTML = `
+        <div class="modal-number">${p.number}</div>
+        <div class="modal-title">${p.title}</div>
+        <div class="modal-tags">${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}</div>
+        <div class="modal-section-label">The Problem</div>
+        <div class="modal-body">${p.problem}</div>
+        <div class="modal-section-label">What I Built</div>
+        <div class="modal-body">${p.solution}</div>
+        <div class="modal-section-label">Tech Stack</div>
+        <div class="modal-body">${p.stack}</div>
+        <div class="modal-section-label">Outcome</div>
+        <div class="modal-body">${p.outcome}</div>
+        <a href="${p.blogLink}" target="_blank" class="modal-blog-link">Read full writeup on blog →</a>
+      `;
+      document.getElementById('modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnOverlay(e) {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
 </body>
 </html>

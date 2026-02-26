@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- ✏️ UPDATE: page title and description for each post -->
+  <title>Post Title — Hafiz Muhammad Zain</title>
+  <meta name="description" content="Post description here — keep it under 160 characters for SEO." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d0d; --surface: #141414; --border: #1f1f1f;
+      --accent: #c8f04a; --accent-dim: rgba(200,240,74,0.1);
+      --text: #e8e8e0; --text-muted: #6b6b60; --text-dim: #3a3a35;
+      --mono: 'DM Mono', monospace; --serif: 'Fraunces', serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+    .grid-lines { position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 80px 80px; pointer-events: none; z-index: 0; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; border-bottom: 1px solid var(--border); background: rgba(13,13,13,0.85); backdrop-filter: blur(12px); }
+    .nav-logo { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.1em; text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 12px; letter-spacing: 0.05em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ARTICLE LAYOUT */
+    article { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 140px 48px 80px; }
+
+    /* POST HEADER */
+    .post-back { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-dim); text-decoration: none; letter-spacing: 0.08em; margin-bottom: 48px; transition: color 0.2s; }
+    .post-back:hover { color: var(--accent); }
+    .post-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .post-tag { padding: 3px 10px; background: var(--accent-dim); border: 1px solid rgba(200,240,74,0.2); font-size: 10px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
+    .post-title { font-family: var(--serif); font-size: clamp(28px, 5vw, 48px); font-weight: 300; line-height: 1.15; letter-spacing: -0.02em; color: var(--text); margin-bottom: 24px; }
+    .post-meta { display: flex; gap: 32px; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 56px; }
+    .post-meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .post-meta-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
+    .post-meta-value { font-size: 12px; color: var(--text-muted); }
+
+    /* POST CONTENT STYLES */
+    /* Use these classes when writing your post content below */
+    .post-content { color: var(--text-muted); line-height: 1.9; }
+    .post-content p { margin-bottom: 24px; }
+    .post-content p:last-child { margin-bottom: 0; }
+    .post-content h2 { font-family: var(--serif); font-size: 26px; font-weight: 300; color: var(--text); margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .post-content h3 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin: 36px 0 12px; }
+    .post-content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,240,74,0.3); transition: border-color 0.2s; }
+    .post-content a:hover { border-color: var(--accent); }
+    .post-content strong { color: var(--text); font-weight: 500; }
+    .post-content em { font-style: italic; }
+    .post-content ul, .post-content ol { padding-left: 20px; margin-bottom: 24px; }
+    .post-content li { margin-bottom: 8px; color: var(--text-muted); }
+    .post-content blockquote { border-left: 2px solid var(--accent); padding-left: 20px; margin: 32px 0; font-style: italic; color: var(--text-dim); }
+    .post-content img { width: 100%; margin: 32px 0; border: 1px solid var(--border); }
+    .post-content .img-caption { font-size: 11px; color: var(--text-dim); text-align: center; margin-top: -24px; margin-bottom: 32px; }
+
+    /* CODE BLOCKS */
+    .post-content pre {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 24px; margin: 32px 0; overflow-x: auto;
+      font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--text-muted);
+    }
+    .post-content code {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 2px 6px; font-family: var(--mono); font-size: 12px; color: var(--accent);
+    }
+    .post-content pre code { background: none; border: none; padding: 0; color: var(--text-muted); }
+
+    /* INFO BOX */
+    .info-box { background: var(--surface); border: 1px solid var(--border); border-left: 2px solid var(--accent); padding: 20px 24px; margin: 32px 0; font-size: 13px; color: var(--text-muted); }
+    .info-box strong { color: var(--accent); }
+
+    /* POST FOOTER */
+    .post-footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .post-footer-author { font-size: 12px; color: var(--text-dim); }
+    .post-footer-author span { color: var(--text-muted); }
+    .btn-outline { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    footer { position: relative; z-index: 1; padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); }
+    .footer-text { font-size: 11px; color: var(--text-dim); }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      article { padding: 120px 24px 60px; }
+      footer { padding: 20px 24px; flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-lines"></div>
+  <nav>
+    <a href="/" class="nav-logo">HMZ / zainsverse.de</a>
+    <ul class="nav-links">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#work">Work</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <article>
+    <a href="/blog/" class="post-back">← All posts</a>
+
+    <!-- ✏️ UPDATE THESE FOR EACH POST -->
+    <div class="post-tags">
+      <span class="post-tag">n8n</span>
+      <span class="post-tag">RAG</span>
+      <span class="post-tag">AI</span>
+    </div>
+    <h1 class="post-title">Post Title Goes Here — Make It Clear and Specific</h1>
+    <div class="post-meta">
+      <div class="post-meta-item">
+        <span class="post-meta-label">Published</span>
+        <span class="post-meta-value">February 2026</span>
+      </div>
+      <div class="post-meta-item">
+        <span class="post-meta-label">Read time</span>
+        <span class="post-meta-value">8 min</span>
+      </div>
+      <div class="post-meta-item">
+        <span class="post-meta-label">Author</span>
+        <span class="post-meta-value">Hafiz Muhammad Zain</span>
+      </div>
+    </div>
+    <!-- ✏️ END HEADER UPDATES -->
+
+
+    <!-- ═══════════════════════════════════════════════
+         ✏️ WRITE YOUR POST CONTENT BELOW THIS LINE
+         Available elements:
+           <h2> — Section heading
+           <h3> — Sub-section (shown in accent color)
+           <p>  — Paragraph
+           <pre><code> — Code block
+           <code> — Inline code
+           <ul>/<li> — Bullet list
+           <ol>/<li> — Numbered list
+           <blockquote> — Callout quote
+           <div class="info-box"> — Highlighted info box
+           <img src="..." alt="..."> — Screenshot
+           <p class="img-caption"> — Caption under image
+    ════════════════════════════════════════════════ -->
+    <div class="post-content">
+
+      <p>Start with a one-paragraph summary of what the reader will learn. What problem does this solve? Why did you build it? What will they be able to do after reading?</p>
+
+      <div class="info-box">
+        <strong>What you'll need:</strong> List any prerequisites here — tools, accounts, or knowledge needed before starting.
+      </div>
+
+      <h2>Section One Heading</h2>
+
+      <p>Write your first section here. Be specific and practical. Show screenshots, paste real configs, explain your decisions.</p>
+
+      <pre><code>// Paste your code or config here
+// Use real examples from your actual workflow</code></pre>
+
+      <h3>Sub-section if needed</h3>
+
+      <p>More detail. Keep paragraphs short — 3-4 sentences max. Readers scan before they read.</p>
+
+      <h2>Section Two Heading</h2>
+
+      <p>Continue the walkthrough. Each section should move the reader one step forward.</p>
+
+      <blockquote>Highlight an important insight, tip, or lesson learned here.</blockquote>
+
+      <h2>What I'd Do Differently</h2>
+
+      <p>This section builds trust. Be honest about limitations, gotchas, or things you'd change. Readers appreciate this more than a perfect tutorial.</p>
+
+      <h2>Conclusion</h2>
+
+      <p>Summarise what was built and what the reader should now be able to do. End with a clear next step or link to related content.</p>
+
+    </div>
+    <!-- ✏️ END POST CONTENT -->
+
+
+    <div class="post-footer">
+      <div class="post-footer-author">Written by <span>Hafiz Muhammad Zain</span> · Germany</div>
+      <a href="/#contact" class="btn-outline">Need this built? Let's talk →</a>
+    </div>
+  </article>
+
+  <footer>
+    <span class="footer-text">© 2026 Hafiz Muhammad Zain · zainsverse.de</span>
+    <a href="/blog/" style="font-size:11px; color:var(--text-dim); text-decoration:none;">← Back to blog</a>
+  </footer>
+</body>
+</html>

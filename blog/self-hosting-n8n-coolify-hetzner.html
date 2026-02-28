@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Self-Hosting n8n on Hetzner with Coolify — Hafiz Muhammad Zain</title>
+  <meta name="description" content="A practical guide to self-hosting n8n on a Hetzner VPS using Coolify — including the real problems I ran into and how I solved them." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d0d; --surface: #141414; --border: #1f1f1f;
+      --accent: #c8f04a; --accent-dim: rgba(200,240,74,0.1);
+      --text: #e8e8e0; --text-muted: #6b6b60; --text-dim: #3a3a35;
+      --mono: 'DM Mono', monospace; --serif: 'Fraunces', serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+    .grid-lines { position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 80px 80px; pointer-events: none; z-index: 0; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; border-bottom: 1px solid var(--border); background: rgba(13,13,13,0.85); backdrop-filter: blur(12px); }
+    .nav-logo { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.1em; text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 12px; letter-spacing: 0.05em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+
+    article { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 140px 48px 80px; }
+
+    .post-back { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-dim); text-decoration: none; letter-spacing: 0.08em; margin-bottom: 48px; transition: color 0.2s; }
+    .post-back:hover { color: var(--accent); }
+    .post-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .post-tag { padding: 3px 10px; background: var(--accent-dim); border: 1px solid rgba(200,240,74,0.2); font-size: 10px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
+    .post-title { font-family: var(--serif); font-size: clamp(28px, 5vw, 48px); font-weight: 300; line-height: 1.15; letter-spacing: -0.02em; color: var(--text); margin-bottom: 24px; }
+    .post-meta { display: flex; gap: 32px; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 56px; flex-wrap: wrap; }
+    .post-meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .post-meta-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
+    .post-meta-value { font-size: 12px; color: var(--text-muted); }
+
+    .post-content { color: var(--text-muted); line-height: 1.9; }
+    .post-content p { margin-bottom: 24px; }
+    .post-content h2 { font-family: var(--serif); font-size: 26px; font-weight: 300; color: var(--text); margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .post-content h3 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin: 36px 0 12px; }
+    .post-content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,240,74,0.3); transition: border-color 0.2s; }
+    .post-content a:hover { border-color: var(--accent); }
+    .post-content strong { color: var(--text); font-weight: 500; }
+    .post-content ul, .post-content ol { padding-left: 20px; margin-bottom: 24px; }
+    .post-content li { margin-bottom: 8px; }
+    .post-content blockquote { border-left: 2px solid var(--accent); padding-left: 20px; margin: 32px 0; font-style: italic; color: var(--text-dim); }
+    .post-content pre { background: var(--surface); border: 1px solid var(--border); padding: 24px; margin: 32px 0; overflow-x: auto; font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--text-muted); }
+    .post-content code { background: var(--surface); border: 1px solid var(--border); padding: 2px 6px; font-family: var(--mono); font-size: 12px; color: var(--accent); }
+    .post-content pre code { background: none; border: none; padding: 0; color: var(--text-muted); }
+    .info-box { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 20px 24px; margin: 32px 0; font-size: 13px; }
+    .info-box strong { color: var(--accent); display: block; margin-bottom: 6px; }
+    .warn-box { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid #f0a84a; padding: 20px 24px; margin: 32px 0; font-size: 13px; color: var(--text-muted); }
+    .warn-box strong { color: #f0a84a; display: block; margin-bottom: 6px; }
+    .step-number { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--accent); color: #0d0d0d; font-size: 11px; font-weight: 500; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
+
+    .post-footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .post-footer-author { font-size: 12px; color: var(--text-dim); }
+    .post-footer-author span { color: var(--text-muted); }
+    .btn-outline { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    footer { position: relative; z-index: 1; padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); }
+    .footer-text { font-size: 11px; color: var(--text-dim); }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      article { padding: 120px 24px 60px; }
+      footer { padding: 20px 24px; flex-direction: column; gap: 8px; }
+      .post-meta { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-lines"></div>
+  <nav>
+    <a href="/" class="nav-logo">HMZ / zainsverse.de</a>
+    <ul class="nav-links">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#work">Work</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <article>
+    <a href="/blog/" class="post-back">← All posts</a>
+
+    <div class="post-tags">
+      <span class="post-tag">n8n</span>
+      <span class="post-tag">Hetzner</span>
+      <span class="post-tag">Coolify</span>
+      <span class="post-tag">Self-Hosting</span>
+    </div>
+
+    <h1 class="post-title">Self-Hosting n8n on Hetzner with Coolify: What Actually Works</h1>
+
+    <div class="post-meta">
+      <div class="post-meta-item">
+        <span class="post-meta-label">Published</span>
+        <span class="post-meta-value">February 2026</span>
+      </div>
+      <div class="post-meta-item">
+        <span class="post-meta-label">Read time</span>
+        <span class="post-meta-value">10 min</span>
+      </div>
+      <div class="post-meta-item">
+        <span class="post-meta-label">Server cost</span>
+        <span class="post-meta-value">~€3.89/month</span>
+      </div>
+      <div class="post-meta-item">
+        <span class="post-meta-label">Author</span>
+        <span class="post-meta-value">Hafiz Muhammad Zain</span>
+      </div>
+    </div>
+
+    <div class="post-content">
+
+      <p>I run n8n on a self-hosted Hetzner VPS and it costs me around €6.50 a month. The n8n cloud plan starts at $20/month and limits your workflow executions. For a freelancer building client automations, self-hosting is an obvious choice — you own your data, your workflows are private, and you're GDPR-compliant by default since the server sits in Germany.</p>
+
+      <p>This post walks through exactly how I set it up using Coolify as the deployment layer. I'll also be honest about what went wrong and what I'd do differently — because the tutorials that skip that part are the ones that leave you stuck at 2am.</p>
+
+      <div class="info-box">
+        <strong>What you'll need before starting</strong>
+        A Hetzner account (hetzner.com), a domain you control, and about 30 minutes. You don't need to know Docker or Linux deeply — Coolify handles most of that for you.
+      </div>
+
+      <h2>Why Hetzner + Coolify</h2>
+
+      <p>Hetzner is a German cloud provider with excellent price-to-performance. Their CX23 server (2 vCPUs, 4GB RAM, 40GB SSD) is more than enough to run n8n plus a few other services, and it costs about €3.56/month. For context, that's the same price as a large coffee in Germany.</p>
+
+      <p>Coolify is an open-source self-hosted alternative to platforms like Heroku or Railway. It gives you a clean UI to deploy services, manage domains, handle SSL certificates automatically, and set up a reverse proxy — all without touching Nginx config files manually. It also connects to your GitHub repos and auto-deploys on push, which is what I use for this portfolio site.</p>
+
+      <p>The combination means you get a proper deployment platform on cheap European infrastructure. Everything stays in the EU, which matters if you're building automations for clients with GDPR obligations.</p>
+
+      <h2>Step 1 — Set Up Your Hetzner Server</h2>
+
+      <p>Go to <strong>hetzner.com</strong> → Cloud → Create Server. Choose these settings:</p>
+
+      <ul>
+        <li><strong>Location:</strong> Helsinki (Finland, EU) — or Nuremberg/Falkenstein if you prefer Germany</li>
+        <li><strong>Image:</strong> Ubuntu 22.04 LTS</li>
+        <li><strong>Type:</strong> CX23 (4GB RAM) — the CX11 with 2GB is too tight once you add a database</li>
+        <li><strong>Networking:</strong> Public IPv4 enabled</li>
+        <li><strong>SSH Key:</strong> Add your public key here — you'll need it to log in</li>
+      </ul>
+
+      <p>Once created, Hetzner gives you an IP address. Copy it — you'll use it in the next step.</p>
+
+      <h3>Point your domain at the server</h3>
+
+      <p>In your DNS provider, create an A record pointing your domain (or subdomain like <code>n8n.yourdomain.de</code>) to that IP address. Also add a wildcard record <code>*.yourdomain.de</code> pointing to the same IP — this lets Coolify handle subdomains for every service you deploy later.</p>
+
+      <pre><code>Type: A
+Host: n8n
+Answer: YOUR_SERVER_IP
+TTL: 600
+
+Type: A
+Host: *
+Answer: YOUR_SERVER_IP
+TTL: 600</code></pre>
+
+      <p>DNS can take up to an hour to propagate. In practice it's usually 5 minutes.</p>
+
+      <h2>Step 2 — Install Coolify</h2>
+
+      <p>SSH into your server, then run the one-line Coolify installer:</p>
+
+      <pre><code>ssh root@YOUR_SERVER_IP
+
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash</code></pre>
+
+      <p>This installs Docker, Docker Compose, and Coolify itself. It takes about 3-5 minutes. When it finishes, it gives you a URL like <code>http://YOUR_IP:8000</code> — open that in your browser and create your admin account.</p>
+
+      <div class="warn-box">
+        <strong>⚠ Do this immediately after installing</strong>
+        Set up your Coolify domain (coolify.yourdomain.de) and enable HTTPS before doing anything else. If you skip this and access Coolify over plain HTTP, some features behave unexpectedly. Go to Settings → Instance → set your domain → save. Coolify handles the SSL certificate automatically via Let's Encrypt.
+      </div>
+
+      <h2>Step 3 — Deploy n8n via Coolify</h2>
+
+      <p>In Coolify, go to <strong>Projects → New Project</strong>. Name it something like "n8n". Then inside that project, click <strong>+ New → Service</strong>.</p>
+
+      <p>Coolify has n8n in its service catalogue — search for it and select it. You'll see a pre-configured template. Before deploying, set these environment variables:</p>
+
+      <pre><code>N8N_HOST=n8n.yourdomain.de
+N8N_PROTOCOL=https
+WEBHOOK_URL=https://n8n.yourdomain.de
+N8N_ENCRYPTION_KEY=generate-a-random-32-char-string-here
+GENERIC_TIMEZONE=Europe/Berlin</code></pre>
+
+      <p>The <code>N8N_ENCRYPTION_KEY</code> is important — it encrypts your stored credentials. Generate one with:</p>
+
+      <pre><code>openssl rand -hex 16</code></pre>
+
+      <p>Then set your domain to <code>https://n8n.yourdomain.de</code> in the Coolify domain field and hit <strong>Deploy</strong>. Coolify pulls the n8n Docker image, starts the container, configures the reverse proxy, and provisions an SSL certificate. The whole thing takes about 2 minutes.</p>
+
+      <h2>Step 4 — First Login and Basic Config</h2>
+
+      <p>Visit <code>https://n8n.yourdomain.de</code>. You'll be greeted with the n8n setup wizard. Create your owner account — use a strong password, this instance is publicly accessible.</p>
+
+      <p>A few settings worth changing immediately in n8n Settings:</p>
+
+      <ul>
+        <li><strong>User Management:</strong> Keep it to just yourself for now unless you're sharing with a team</li>
+        <li><strong>Community Nodes:</strong> Enable this — some very useful community nodes exist for things Coolify doesn't support natively</li>
+        <li><strong>Timezone:</strong> Set to Europe/Berlin if you're in Germany — otherwise scheduled workflows run at wrong times</li>
+      </ul>
+
+      <h2>What I'd Do Differently</h2>
+
+      <p>A few things caught me off guard that the official docs don't emphasise enough.</p>
+
+      <p><strong>Use a persistent volume for your data.</strong> By default, if Coolify redeploys your n8n container, it can wipe your workflow data. In Coolify's service settings, make sure the data path <code>/home/node/.n8n</code> is mounted to a persistent volume. Coolify calls this "Persistent Storage" in the service configuration. Set it up before you build your first workflow.</p>
+
+      <p><strong>The WEBHOOK_URL variable is critical.</strong> If you skip it or set it wrong, webhooks from external services (Gmail, Stripe, etc.) won't reach n8n. It must match exactly the domain you're using, including <code>https://</code>.</p>
+
+      <p><strong>CX13 is too small. I recommend CX23 (4GB RAM) as the minimum if you plan to run n8n plus a database plus anything else on the same server. At 2GB, you'll hit memory pressure when running complex workflows with large payloads.
+
+      <blockquote>The biggest gotcha: n8n stores credentials encrypted with your encryption key. If you ever lose that key or change it, all your stored credentials become unreadable. Save that key somewhere safe — a password manager works fine.</blockquote>
+
+      <h2>Keeping It Running</h2>
+
+      <p>Coolify handles restarts automatically — if the n8n container crashes, it restarts it. But there are a few maintenance habits worth building:</p>
+
+      <ul>
+        <li>Check the Coolify dashboard weekly to see if n8n has a newer version available — updates bring bug fixes and new nodes</li>
+        <li>Export your workflows as JSON backups occasionally (n8n → Settings → Import/Export) — this is your disaster recovery plan</li>
+        <li>Set up a simple uptime monitor like UptimeRobot (free) pointed at your n8n URL — it'll email you if the instance goes down</li>
+      </ul>
+
+      <h2>Cost Breakdown</h2>
+
+      <p>For reference, here's what this setup costs me per month:</p>
+
+      <ul>
+        <li><strong>Hetzner CX23:</strong> ~€3.56/month</li>
+        <li><strong>Domain:</strong> ~€0.33/month (€4/year)</li>
+        <li><strong>Coolify:</strong> Free (self-hosted)</li>
+        <li><strong>n8n:</strong> Free (self-hosted)</li>
+        <li><strong>Total: ~€3.89/month</strong></li>
+      </ul>
+
+      <p>Compare that to n8n Cloud's Starter plan at $20/month (~€18) with execution limits, or their Pro plan at $50/month. Self-hosting pays for itself immediately if you're running more than a handful of workflows.</p>
+
+      <h2>Conclusion</h2>
+
+      <p>The setup takes about 30 minutes if you follow these steps in order. The main things to get right are: persistent storage before you build anything, the correct environment variables especially <code>WEBHOOK_URL</code>, and saving your encryption key somewhere safe.</p>
+
+      <p>Once it's running, it genuinely just runs. I've had my instance up for months without touching it. Coolify handles SSL renewal, container restarts, and deployment — I just open n8n and build workflows.</p>
+
+      <p>If you're building automations for clients and you care about data privacy and cost, self-hosting n8n on Hetzner is one of the better decisions you can make early on.</p>
+
+    </div>
+
+    <div class="post-footer">
+      <div class="post-footer-author">Written by <span>Hafiz Muhammad Zain</span> · Germany</div>
+      <a href="/#contact" class="btn-outline">Need this set up for you? →</a>
+    </div>
+  </article>
+
+  <footer>
+    <span class="footer-text">© 2026 Hafiz Muhammad Zain · zainsverse.de</span>
+    <a href="/blog/" style="font-size:11px; color:var(--text-dim); text-decoration:none;">← Back to blog</a>
+  </footer>
+</body>
+</html>

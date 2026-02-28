@@ -235,9 +235,9 @@
     <section class="section" id="blog">
       <div class="section-header reveal"><span class="section-number">03</span><h2 class="section-title">Writing</h2></div>
       <div class="blog-grid reveal">
-        <a class="blog-card" href="/blog/"><div class="blog-date">Coming Soon</div><div class="blog-title">How I Built a RAG Chatbot in n8n Using Pinecone and HuggingFace</div><div class="blog-excerpt">A full walkthrough of building a document-aware chatbot — from file ingestion to vector search to the chat interface. No Python required.</div></a>
-        <a class="blog-card" href="/blog/"><div class="blog-date">Coming Soon</div><div class="blog-title">Automating Email Triage with AI: A Real n8n Workflow</div><div class="blog-excerpt">How I built a Gmail automation that classifies, responds to, and routes emails using AI — and what I learned about edge cases along the way.</div></a>
-        <a class="blog-card" href="/blog/"><div class="blog-date">Coming Soon</div><div class="blog-title">Self-Hosting n8n on Hetzner with Coolify: A Practical Guide</div><div class="blog-excerpt">Why I chose to self-host n8n instead of the cloud version, how I set it up on a Hetzner VPS using Coolify, and what I'd do differently.</div></a>
+        <a class="blog-card" href="/blog/rag-chatbot-n8n.html"><div class="blog-date">February 2026</div><div class="blog-title">How I Built a RAG Chatbot in n8n Using Pinecone and HuggingFace</div><div class="blog-excerpt">A full walkthrough of building a document-aware chatbot — from file ingestion to vector search to the chat interface. No Python required.</div></a>
+        <a class="blog-card" href="/blog/email-automation-n8n.html"><div class="blog-date">February 2026</div><div class="blog-title">Automating Email Triage with AI: A Real n8n Workflow</div><div class="blog-excerpt">How I built a Gmail automation that classifies, responds to, and routes emails using AI — and what I learned about edge cases along the way.</div></a>
+        <a class="blog-card" href="/blog/self-hosting-n8n-coolify-hetzner.html"><div class="blog-date">February 2026</div><div class="blog-title">Self-Hosting n8n on Hetzner with Coolify: What Actually Works</div><div class="blog-excerpt">Why I chose to self-host n8n instead of the cloud version, how I set it up on a Hetzner VPS using Coolify, and what I'd do differently.</div></a>
       </div>
       <div class="blog-cta-row reveal">
         <span class="blog-cta-text">All articles on</span>
@@ -251,10 +251,10 @@
         <div class="reveal">
           <p class="contact-intro">Have a workflow that needs automating? Let's talk.</p>
           <p class="contact-sub">I work with small teams and businesses that want to eliminate manual processes. Whether it's a single integration or a full AI automation system, I'm happy to discuss what's possible and what makes sense for your setup.</p>
-          <a href="mailto:zainravian124@gmail.com" class="btn-primary">Send an email →</a>
+          <a href="/cdn-cgi/l/email-protection#98e2f9f1f6eaf9eef1f9f6a9aaacd8fff5f9f1f4b6fbf7f5" class="btn-primary">Send an email →</a>
         </div>
         <div class="contact-links reveal">
-          <a href="mailto:zainravian124@gmail.com" class="contact-link"><span class="contact-link-type">Email</span><span class="contact-link-label">zainravian124@gmail.com →</span></a>
+          <a href="/cdn-cgi/l/email-protection#562c373f382437203f373867646216313b373f3a7835393b" class="contact-link"><span class="contact-link-type">Email</span><span class="contact-link-label"><span class="__cf_email__" data-cfemail="bec4dfd7d0ccdfc8d7dfd08f8c8afed9d3dfd7d290ddd1d3">[email&#160;protected]</span> →</span></a>
           <a href="/blog/" class="contact-link"><span class="contact-link-type">Blog</span><span class="contact-link-label">zainsverse.de/blog →</span></a>
           <a href="https://github.com/Hafiz-Muhammad-Zain" target="_blank" class="contact-link"><span class="contact-link-type">GitHub</span><span class="contact-link-label">github.com/Hafiz-Muhammad-Zain →</span></a>
           <div class="contact-link" style="cursor:default;"><span class="contact-link-type">Location</span><span class="contact-link-label">Germany · EU · GDPR-ready</span></div>
@@ -275,7 +275,7 @@
     </div>
   </div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60); });
@@ -283,10 +283,10 @@
     reveals.forEach(el => observer.observe(el));
 
     const projects = {
-      p1: { number: 'Project 001', title: 'AI Customer Service Agent', tags: ['n8n', 'AI Agent', 'Google Sheets', 'OpenRouter'], problem: 'Customer support teams waste time manually searching spreadsheets to answer "what\'s the status of order #1234?" type questions. Every lookup interrupts focus and slows response time.', solution: 'Built an AI chat agent in n8n that connects directly to Google Sheets. The agent can look up orders by name or ID, check customer account status, and append new records — all through natural language conversation.', stack: 'n8n · OpenRouter · Google Sheets API · Memory buffer for conversation context', outcome: 'Customer status lookups that previously required manual spreadsheet searches can now be answered instantly through a chat interface. Supports multiple tools in parallel and remembers conversation context.', blogLink: '/blog/' },
+      p1: { number: 'Project 001', title: 'AI Customer Service Agent', tags: ['n8n', 'AI Agent', 'Google Sheets', 'OpenRouter'], problem: 'Customer support teams waste time manually searching spreadsheets to answer "what\'s the status of order #1234?" type questions. Every lookup interrupts focus and slows response time.', solution: 'Built an AI chat agent in n8n that connects directly to Google Sheets. The agent can look up orders by name or ID, check customer account status, and append new records — all through natural language conversation.', stack: 'n8n · OpenRouter · Google Sheets API · Memory buffer for conversation context', outcome: 'Customer status lookups that previously required manual spreadsheet searches can now be answered instantly through a chat interface. Supports multiple tools in parallel and remembers conversation context.', blogLink: '/blog/ai-customer-service-agent.html' },
       p2: { number: 'Project 002', title: 'Automated Content Pipeline', tags: ['n8n', 'Tavily Search', 'AI Writing', 'Google Sheets'], problem: 'Creating regular content requires research time before writing. This creates a bottleneck that means either inconsistent posting or hours spent on prep.', solution: 'A workflow that reads pending topics from a Google Sheet, uses Tavily to search the web for current context, passes that research to an AI agent to generate a polished post, then writes the result back to the sheet.', stack: 'n8n · Tavily Search API · OpenRouter · Google Sheets API', outcome: 'Takes a topic idea from a spreadsheet to a ready-to-publish post automatically. Each post is grounded in current web content. Fully hands-off after initial setup.', blogLink: '/blog/' },
-      p3: { number: 'Project 003', title: 'RAG FAQ Chatbot', tags: ['RAG', 'Pinecone', 'HuggingFace', 'Google Drive', 'n8n'], problem: 'Businesses with large documentation sets struggle to make that knowledge accessible. Staff and customers ask the same questions repeatedly because documents are hard to search.', solution: 'A full RAG pipeline in n8n. Files added to Google Drive are automatically downloaded, chunked, embedded using HuggingFace, and stored in Pinecone. A chat interface answers questions by retrieving the most relevant chunks.', stack: 'n8n · Google Drive API · HuggingFace Embeddings · Pinecone · OpenRouter · Recursive text splitting', outcome: 'Any document uploaded to Google Drive becomes instantly queryable. The system stays up to date automatically. Self-hosted on EU infrastructure.', blogLink: '/blog/' },
-      p4: { number: 'Project 004', title: 'AI Email Classifier & Auto-Responder', tags: ['Gmail', 'AI Classifier', 'Pinecone', 'Slack', 'n8n'], problem: 'High-volume inboxes require constant monitoring. Sorting emails, drafting replies, and routing non-standard emails all consume significant team time.', solution: 'A Gmail-triggered workflow that classifies each email using AI. Customer emails are handled by an agent that queries a Pinecone knowledge base and sends a tailored reply. Slack handles escalations.', stack: 'n8n · Gmail API · AI Text Classifier · OpenRouter · Pinecone · HuggingFace · Slack API', outcome: 'Routine customer emails are handled automatically. The knowledge base ensures replies are accurate. Unusual emails are flagged rather than auto-replied, keeping a human in the loop.', blogLink: '/blog/' }
+      p3: { number: 'Project 003', title: 'RAG FAQ Chatbot', tags: ['RAG', 'Pinecone', 'HuggingFace', 'Google Drive', 'n8n'], problem: 'Businesses with large documentation sets struggle to make that knowledge accessible. Staff and customers ask the same questions repeatedly because documents are hard to search.', solution: 'A full RAG pipeline in n8n. Files added to Google Drive are automatically downloaded, chunked, embedded using HuggingFace, and stored in Pinecone. A chat interface answers questions by retrieving the most relevant chunks.', stack: 'n8n · Google Drive API · HuggingFace Embeddings · Pinecone · OpenRouter · Recursive text splitting', outcome: 'Any document uploaded to Google Drive becomes instantly queryable. The system stays up to date automatically. Self-hosted on EU infrastructure.', blogLink: '/blog/rag-chatbot-n8n.html' },
+      p4: { number: 'Project 004', title: 'AI Email Classifier & Auto-Responder', tags: ['Gmail', 'AI Classifier', 'Pinecone', 'Slack', 'n8n'], problem: 'High-volume inboxes require constant monitoring. Sorting emails, drafting replies, and routing non-standard emails all consume significant team time.', solution: 'A Gmail-triggered workflow that classifies each email using AI. Customer emails are handled by an agent that queries a Pinecone knowledge base and sends a tailored reply. Slack handles escalations.', stack: 'n8n · Gmail API · AI Text Classifier · OpenRouter · Pinecone · HuggingFace · Slack API', outcome: 'Routine customer emails are handled automatically. The knowledge base ensures replies are accurate. Unusual emails are flagged rather than auto-replied, keeping a human in the loop.', blogLink: '/blog/email-automation-n8n.html' }
     };
 
     function openModal(id) {
@@ -295,9 +295,4 @@
       document.getElementById('modal-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-    function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); document.body.style.overflow = ''; }
-    function closeModalOnOverlay(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-  </script>
-</body>
-</html>
+    function closeModal() { document.getElementById('modal-overlay
